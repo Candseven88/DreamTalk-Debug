@@ -706,5 +706,49 @@
 };
   })();
 </script>
+
+<!-- Firebase App + Auth CDN -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+
+<!-- 自动匿名登录脚本 -->
+<script>
+  // 初始化 Firebase + 匿名登录
+  document.addEventListener('DOMContentLoaded', function() {
+    // Firebase 配置
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    // 初始化 Firebase
+    firebase.initializeApp(firebaseConfig);
+    
+    // 获取 Auth 实例
+    const auth = firebase.auth();
+    
+    // 检查用户是否已登录
+    auth.onAuthStateChanged(function(user) {
+      if (user) {
+        // 用户已登录，保存 UID 到 localStorage
+        localStorage.setItem('userId', user.uid);
+        console.log('User is signed in with UID:', user.uid);
+      } else {
+        // 用户未登录，执行匿名登录
+        auth.signInAnonymously()
+          .then(() => {
+            console.log('Anonymous authentication successful');
+          })
+          .catch((error) => {
+            console.error('Anonymous authentication error:', error.code, error.message);
+          });
+      }
+    });
+  });
+</script>
 </body>
 </html>
