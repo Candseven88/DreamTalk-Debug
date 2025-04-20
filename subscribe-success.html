@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Success - DreamTalk Box</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial Rounded MT Bold', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #fcf2f7;
+            color: #5a3d5c;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        
+        .success-icon {
+            font-size: 80px;
+            color: #4CAF50;
+            margin-bottom: 30px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        .success-title {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #e86ed0;
+        }
+        
+        .success-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            color: #9d7e9f;
+            line-height: 1.5;
+        }
+        
+        .home-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px 30px;
+            background-color: #e86ed0;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(232, 110, 208, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .home-button:hover {
+            background-color: #d64bbd;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(232, 110, 208, 0.4);
+        }
+        
+        .home-button i {
+            margin-right: 10px;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #e86ed0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 50px;
+            text-decoration: none;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 15px;
+            }
+            
+            .success-icon {
+                font-size: 60px;
+            }
+            
+            .success-title {
+                font-size: 2rem;
+            }
+            
+            .success-subtitle {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="logo">
+            <i class="fas fa-moon"></i> DreamTalk Box
+        </a>
+        
+        <div class="success-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        
+        <h1 class="success-title">Thank You for Subscribing!</h1>
+        <p class="success-subtitle">Your DreamTalk Box plan has been activated.</p>
+        
+        <a href="index.html" class="home-button">
+            <i class="fas fa-home"></i> Return to Home
+        </a>
+    </div>
+    
+    <!-- 订阅等级浮标 -->
+    <div id="subscription-badge" style="position: fixed; top: 15px; right: 15px; padding: 8px 12px; border-radius: 20px; font-size: 14px; font-weight: 500; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 1000; background-color: #f8f0ff; color: #6b46c1; transition: all 0.3s ease;"></div>
+
+    <script>
+      (function() {
+        if (!localStorage.getItem('userPlan')) {
+          localStorage.setItem('userPlan', 'free');
+        }
+        const userPlan = localStorage.getItem('userPlan').toLowerCase();
+        const badge = document.getElementById('subscription-badge');
+
+        switch(userPlan) {
+          case 'free':
+            badge.innerHTML = '🌱 Plan: Free';
+            badge.style.backgroundColor = '#f0f9ff';
+            badge.style.color = '#3182ce';
+            break;
+          case 'starter':
+            badge.innerHTML = '🔰 Plan: Starter';
+            badge.style.backgroundColor = '#f0fff4';
+            badge.style.color = '#38a169';
+            break;
+          case 'plus':
+            badge.innerHTML = '🚀 Plan: Plus';
+            badge.style.backgroundColor = '#faf5ff';
+            badge.style.color = '#805ad5';
+            break;
+          case 'pro':
+            badge.innerHTML = '👑 Plan: Pro';
+            badge.style.backgroundColor = '#fff5f7';
+            badge.style.color = '#d53f8c';
+            break;
+          default:
+            badge.innerHTML = '🌱 Plan: Free';
+            badge.style.backgroundColor = '#f0f9ff';
+            badge.style.color = '#3182ce';
+        }
+
+        badge.onmouseover = function() {
+          this.style.transform = 'translateY(-2px)';
+          this.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
+        };
+        badge.onmouseout = function() {
+          this.style.transform = 'translateY(0)';
+          this.style.boxShadow = '0 2px 5px rgba(0,0,0,0.1)';
+        };
+        badge.onclick = function() {
+          window.location.href = '/subscribe-success.html';
+        };
+      })();
+    </script>
+</body>
+</html>
