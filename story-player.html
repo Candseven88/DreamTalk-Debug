@@ -715,5 +715,117 @@
             }
         }
     </script>
+<!-- 🌟 订阅等级浮标（插入在每个页面底部） -->
+<div id="subscription-badge" style="position: fixed; top: 15px; right: 15px; padding: 8px 12px; border-radius: 20px; font-size: 14px; font-weight: 500; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 1000; background-color: #f8f0ff; color: #6b46c1; transition: all 0.3s ease;"></div>
+
+<script>
+  (function() {
+    if (!localStorage.getItem('userPlan')) {
+      localStorage.setItem('userPlan', 'free');
+    }
+    const userPlan = localStorage.getItem('userPlan').toLowerCase();
+    const badge = document.getElementById('subscription-badge');
+
+    switch(userPlan) {
+      case 'free':
+        badge.innerHTML = '🌱 Plan: Free';
+        badge.style.backgroundColor = '#f0f9ff';
+        badge.style.color = '#3182ce';
+        break;
+      case 'starter':
+        badge.innerHTML = '🔰 Plan: Starter';
+        badge.style.backgroundColor = '#f0fff4';
+        badge.style.color = '#38a169';
+        break;
+      case 'plus':
+        badge.innerHTML = '🚀 Plan: Plus';
+        badge.style.backgroundColor = '#faf5ff';
+        badge.style.color = '#805ad5';
+        break;
+      case 'pro':
+        badge.innerHTML = '👑 Plan: Pro';
+        badge.style.backgroundColor = '#fff5f7';
+        badge.style.color = '#d53f8c';
+        break;
+      default:
+        badge.innerHTML = '🌱 Plan: Free';
+        badge.style.backgroundColor = '#f0f9ff';
+        badge.style.color = '#3182ce';
+    }
+
+    badge.onmouseover = function() {
+      this.style.transform = 'translateY(-2px)';
+      this.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
+    };
+    badge.onmouseout = function() {
+      this.style.transform = 'translateY(0)';
+      this.style.boxShadow = '0 2px 5px rgba(0,0,0,0.1)';
+    };
+    badge.onclick = function() {
+      window.location.href = '/subscribe-success.html';
+    };
+  })();
+</script>
+// 播放权限限制系统
+function speakStory() {
+  // 获取用户订阅等级
+  const userPlan = localStorage.getItem('userPlan') || 'free';
+  
+  // 如果是付费用户，直接允许播放
+  if (userPlan !== 'free' && ['starter', 'plus', 'pro'].includes(userPlan.toLowerCase())) {
+    playAudioContent(); // 调用原有的播放函数
+    return;
+  }
+  
+  // 对免费用户进行播放次数限制
+  const today = new Date().toISOString().split('T')[0]; // 获取当前日期，格式：YYYY-MM-DD
+  
+  // 获取并解析每日播放记录
+  let dailyPlayLog = {};
+  try {
+    dailyPlayLog = JSON.parse(localStorage.getItem('dailyPlayLog') || '{}');
+  } catch (e) {
+    dailyPlayLog = {};
+  }
+  
+  // 获取今日播放次数
+  const todayPlayCount = dailyPlayLog[today] || 0;
+  
+  // 检查是否超出限制
+  if (todayPlayCount >= 5) {
+    // 显示升级提示
+    alert("Free users can only play 5 stories per day. Please upgrade your plan for unlimited access.");
+    return;
+  }
+  
+  // 允许播放，并更新播放记录
+  playAudioContent(); // 调用原有的播放函数
+  
+  // 更新播放记录
+  dailyPlayLog[today] = todayPlayCount + 1;
+  localStorage.setItem('dailyPlayLog', JSON.stringify(dailyPlayLog));
+}
+
+// 假设这是原有的播放函数，根据实际情况替换
+function playAudioContent() {
+  // 原有的播放逻辑
+  // 如果页面中已有播放函数，请将此函数替换为调用原有函数
+  console.log("Playing audio content...");
+  
+  // 如果页面使用的是其他播放函数名称，请相应修改 speakStory() 中的调用
+}
+
+// 将原有播放按钮的点击事件修改为调用 speakStory
+document.addEventListener('DOMContentLoaded', function() {
+  const playButton = document.getElementById('play-button'); // 根据实际情况修改选择器
+  if (playButton) {
+    // 移除原有事件监听器（如果有）
+    const newPlayButton = playButton.cloneNode(true);
+    playButton.parentNode.replaceChild(newPlayButton, playButton);
+    
+    // 添加新的事件监听器
+    newPlayButton.addEventListener('click', speakStory);
+  }
+});
 </body>
 </html>

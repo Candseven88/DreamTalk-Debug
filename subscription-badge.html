@@ -1,0 +1,60 @@
+<div id="subscription-badge" style="position: fixed; top: 15px; right: 15px; padding: 8px 12px; border-radius: 20px; font-size: 14px; font-weight: 500; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 1000; background-color: #f8f0ff; color: #6b46c1; transition: all 0.3s ease;"></div>
+
+<script>
+  (function() {
+    // 检查并设置默认订阅等级
+    if (!localStorage.getItem('userPlan')) {
+      localStorage.setItem('userPlan', 'free');
+    }
+    
+    // 获取当前订阅等级
+    const userPlan = localStorage.getItem('userPlan').toLowerCase();
+    
+    // 设置订阅等级标签内容和样式
+    const badge = document.getElementById('subscription-badge');
+    
+    // 根据不同订阅等级设置不同图标和文本
+    switch(userPlan) {
+      case 'free':
+        badge.innerHTML = '🌱 Plan: Free';
+        badge.style.backgroundColor = '#f0f9ff';
+        badge.style.color = '#3182ce';
+        break;
+      case 'starter':
+        badge.innerHTML = '🔰 Plan: Starter';
+        badge.style.backgroundColor = '#f0fff4';
+        badge.style.color = '#38a169';
+        break;
+      case 'plus':
+        badge.innerHTML = '🚀 Plan: Plus';
+        badge.style.backgroundColor = '#faf5ff';
+        badge.style.color = '#805ad5';
+        break;
+      case 'pro':
+        badge.innerHTML = '👑 Plan: Pro';
+        badge.style.backgroundColor = '#fff5f7';
+        badge.style.color = '#d53f8c';
+        break;
+      default:
+        badge.innerHTML = '🌱 Plan: Free';
+        badge.style.backgroundColor = '#f0f9ff';
+        badge.style.color = '#3182ce';
+    }
+    
+    // 添加悬停效果
+    badge.onmouseover = function() {
+      this.style.transform = 'translateY(-2px)';
+      this.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
+    };
+    
+    badge.onmouseout = function() {
+      this.style.transform = 'translateY(0)';
+      this.style.boxShadow = '0 2px 5px rgba(0,0,0,0.1)';
+    };
+    
+    // 点击跳转到订阅页面
+    badge.onclick = function() {
+      window.location.href = '/subscribe-success.html';
+    };
+  })();
+</script>
