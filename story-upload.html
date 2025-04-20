@@ -751,5 +751,73 @@
     });
   });
 </script>
+
+<!-- story-upload.html 页面 Firestore 写入脚本 -->
+<script>
+    // 确保 Firebase 已初始化
+    document.addEventListener('DOMContentLoaded', function() {
+      // 引入 Firestore
+      const firestoreScript = document.createElement('script');
+      firestoreScript.src = 'https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js';
+      firestoreScript.onload = initFirestore;
+      document.head.appendChild(firestoreScript);
+      
+      function initFirestore() {
+        // 获取 Firestore 实例
+        const db = firebase.firestore();
+        
+        // 监听故事表单提交
+        const storyForm = document.getElementById('story-form') || document.querySelector('form');
+        if (storyForm) {
+          const originalSubmit = storyForm.onsubmit;
+          
+          storyForm.onsubmit = async function(e) {
+            // 如果有原始提交处理函数，先执行它
+            if (originalSubmit) {
+              const result = originalSubmit.call(this, e);
+              if (result === false) return false;
+            }
+            
+            // 获取表单数据
+            const title = document.getElementById('story-title').value;
+            const content = document.getElementById('story-content').value;
+            const coverUrl = document.getElementById('cover-url').value || 'default-cover.jpg';
+            
+            // 获取用户ID
+            const userId = localStorage.getItem('userId');
+            if (!userId) {
+              console.error('User not logged in');
+              return;
+            }
+            
+            try {
+              // 创建新故事文档
+              const storyRef = await db.collection('users').doc(userId).collection('stories').add({
+                title: title,
+                content: content,
+                coverUrl: coverUrl,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+              });
+              
+              console.log('Story saved to Firestore with ID:', storyRef.id);
+              
+              // 如果本地也需要保存，可以更新 localStorage
+              const userStories = JSON.parse(localStorage.getItem('userStories') || '[]');
+              userStories.push({
+                id: storyRef.id,
+                title: title,
+                content: content,
+                coverUrl: coverUrl
+              });
+              localStorage.setItem('userStories', JSON.stringify(userStories));
+              
+            } catch (error) {
+              console.error('Error saving story to Firestore:', error);
+            }
+          };
+        }
+      }
+    });
+  </script>
 </body>
 </html>

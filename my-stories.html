@@ -519,5 +519,111 @@
     });
   });
 </script>
+
+<!-- my-stories.html 页面 Firestore 读取脚本 -->
+<script>
+    // 页面加载 → 从 Firestore 读取用户 stories 渲染
+    document.addEventListener('DOMContentLoaded', function() {
+      // 引入 Firestore
+      const firestoreScript = document.createElement('script');
+      firestoreScript.src = 'https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js';
+      firestoreScript.onload = fetchUserStories;
+      document.head.appendChild(firestoreScript);
+      
+      async function fetchUserStories() {
+        // 获取 Firestore 实例
+        const db = firebase.firestore();
+        
+        // 获取用户ID
+        const userId = localStorage.getItem('userId');
+        if (!userId) {
+          console.error('User not logged in');
+          displayMessage('Please log in to view your stories');
+          return;
+        }
+        
+        // 获取故事列表容器
+        const storiesContainer = document.getElementById('user-stories') || 
+                                document.querySelector('.stories-grid') || 
+                                document.querySelector('.stories-container');
+        
+        if (!storiesContainer) {
+          console.error('Stories container not found');
+          return;
+        }
+        
+        try {
+          // 查询用户的故事
+          const storiesSnapshot = await db.collection('users').doc(userId).collection('stories').get();
+          
+          if (storiesSnapshot.empty) {
+            displayMessage('You haven\'t created any stories yet');
+            return;
+          }
+          
+          // 清空容器
+          storiesContainer.innerHTML = '';
+          
+          // 渲染故事
+          storiesSnapshot.forEach(doc => {
+            const story = doc.data();
+            story.id = doc.id;
+            
+            // 创建故事卡片
+            const storyCard = createStoryCard(story);
+            storiesContainer.appendChild(storyCard);
+          });
+          
+          // 同时更新 localStorage
+          const stories = storiesSnapshot.docs.map(doc => {
+            const data = doc.data();
+            return {
+              id: doc.id,
+              title: data.title,
+              content: data.content,
+              coverUrl: data.coverUrl
+            };
+          });
+          
+          localStorage.setItem('userStories', JSON.stringify(stories));
+          
+        } catch (error) {
+          console.error('Error fetching stories from Firestore:', error);
+          displayMessage('Failed to load your stories');
+        }
+      }
+      
+      // 辅助函数：创建故事卡片
+      function createStoryCard(story) {
+        const card = document.createElement('div');
+        card.className = 'story-card';
+        
+        // 设置卡片内容 - 根据实际页面结构调整
+        card.innerHTML = `
+          <div class="story-cover">
+            <img src="${story.coverUrl || 'default-cover.jpg'}" alt="${story.title}" onerror="this.src='default-cover.jpg'">
+          </div>
+          <div class="story-info">
+            <h3>${story.title}</h3>
+            <p>${story.content.substring(0, 100)}${story.content.length > 100 ? '...' : ''}</p>
+            <a href="story-player.html?id=${story.id}" class="read-button">Read Story</a>
+          </div>
+        `;
+        
+        return card;
+      }
+      
+      // 辅助函数：显示消息
+      function displayMessage(message) {
+        const storiesContainer = document.getElementById('user-stories') || 
+                                document.querySelector('.stories-grid') || 
+                                document.querySelector('.stories-container');
+        
+        if (storiesContainer) {
+          storiesContainer.innerHTML = `<div class="empty-message">${message}</div>`;
+        }
+      }
+    });
+  </script>
 </body>
 </html>
