@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamTalk Box - Analytics Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #e86ed0;
+            --secondary-color: #a1d2ce;
+            --text-color: #5a3d5c;
+            --light-text: #9d7e9f;
+            --background-color: #f9f4f9;
+            --card-color: white;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f9f4f9 0%, #f0f9f8 100%);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+        }
+        
+        .back-button {
+            background-color: var(--secondary-color);
+            color: #3a6f6a;
+            border: none;
+            border-radius: 50px;
+            padding: 8px 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+        
+        .back-button i {
+            margin-right: 8px;
+        }
+        
+        .back-button:hover {
+            background-color: #8bc4bf;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(161, 210, 206, 0.3);
+        }
+        
+        .dashboard-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+        }
+        
+        .dashboard-title h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .dashboard-title p {
+            color: var(--light-text);
+            font-size: 1.1rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background-color: var(--card-color);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-card h3 {
+            color: var(--light-text);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+        
+        .stat-card .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .stat-card .stat-description {
+            color: var(--light-text);
+            font-size: 0.9rem;
+        }
+        
+        .chart-container {
+            background-color: var(--card-color);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
+        }
+        
+        .chart-container h3 {
+            color: var(--text-color);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: var(--light-text);
+            font-size: 0.9rem;
+            background-color: white;
+            margin-top: auto;
+        }
+        
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 300px;
+            font-size: 1.2rem;
+            color: var(--light-text);
+        }
+        
+        .loading i {
+            margin-right: 10px;
+            animation: spin 1s infinite linear;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stat-card .stat-value {
+                font-size: 2rem;
+            }
+            
+            .dashboard-title h1 {
+                font-size: 1.8rem;
+            }
+            
+            .chart-wrapper {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <button class="back-button" onclick="location.href='index.html'">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </button>
+            <a href="index.html" class="logo">
+                <i class="fas fa-moon"></i> DreamTalk Box
+            </a>
+            <div style="width: 100px;"></div> <!-- Spacer for alignment -->
+        </header>
+        
+        <div class="dashboard-title">
+            <h1>Analytics Dashboard</h1>
+            <p>Track user engagement and story performance</p>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Plays</h3>
+                <div class="stat-value" id="total-plays">-</div>
+                <div class="stat-description">Story playbacks initiated</div>
+            </div>
+            
+            <div class="stat-card">
+                <h3>Active Users</h3>
+                <div class="stat-value" id="active-users">-</div>
+                <div class="stat-description">Unique users engaged</div>
+            </div>
+            
+            <div class="stat-card">
+                <h3>Average Play Duration</h3>
+                <div class="stat-value" id="avg-duration">-</div>
+                <div class="stat-description">Minutes per story</div>
+            </div>
+        </div>
+        
+        <div class="chart-container">
+            <h3>Subscription Plan Distribution</h3>
+            <div class="chart-wrapper">
+                <canvas id="subscription-chart"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart-container">
+            <h3>Source Page Distribution</h3>
+            <div class="chart-wrapper">
+                <canvas id="source-chart"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>© 2023 DreamTalk Box. All rights reserved.</p>
+    </footer>
+    
+    <script>
+        // Chart colors
+        const chartColors = [
+            'rgba(232, 110, 208, 0.7)',
+            'rgba(161, 210, 206, 0.7)',
+            'rgba(157, 126, 159, 0.7)',
+            'rgba(90, 61, 92, 0.7)',
+            'rgba(58, 111, 106, 0.7)'
+        ];
+        
+        // Initialize charts with loading state
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show loading state
+            document.querySelectorAll('.stat-value').forEach(el => {
+                el.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            });
+            
+            // Load and process data
+            loadAnalyticsData();
+        });
+        
+        /**
+         * Load analytics data from API or localStorage
+         */
+        async function loadAnalyticsData() {
+            try {
+                // Try to fetch from API first
+                let logs = [];
+                
+                try {
+                    const response = await fetch('/logs.json');
+                    if (response.ok) {
+                        logs = await response.json();
+                        console.log('Loaded logs from API:', logs.length);
+                    } else {
+                        throw new Error('API not available');
+                    }
+                } catch (apiError) {
+                    console.log('API not available, using localStorage logs');
+                    
+                    // Fallback to localStorage
+                    const storedLogs = localStorage.getItem('playbackLogs');
+                    if (storedLogs) {
+                        logs = JSON.parse(storedLogs);
+                        console.log('Loaded logs from localStorage:', logs.length);
+                    } else {
+                        // If no logs in localStorage, use sample data
+                        logs = generateSampleData();
+                        console.log('Using sample data:', logs.length);
+                    }
+                }
+                
+                // Process data and update UI
+                processAnalyticsData(logs);
+                
+            } catch (error) {
+                console.error('Error loading analytics data:', error);
+                document.querySelectorAll('.stat-value').forEach(el => {
+                    el.textContent = 'Error';
+                });
+            }
+        }
+        
+        /**
+         * Process analytics data and update UI
+         */
+        function processAnalyticsData(logs) {
+            // Filter only play events
+            const playEvents = logs.filter(log => log.action === 'play');
+            const completeEvents = logs.filter(log => log.action === 'complete');
+            
+            // Calculate total plays
+            const totalPlays = playEvents.length;
+            document.getElementById('total-plays').textContent = totalPlays;
+            
+            // Calculate unique users
+            const uniqueUsers = new Set(logs.map(log => log.email)).size;
+            document.getElementById('active-users').textContent = uniqueUsers;
+            
+            // Calculate average duration
+            let totalDuration = 0;
+            let durationCount = 0;
+            
+            completeEvents.forEach(log => {
+                if (log.duration && log.duration > 0) {
+                    totalDuration += log.duration;
+                    durationCount++;
+                }
+            });
+            
+            const avgDuration = durationCount > 0 ? Math.round(totalDuration / durationCount / 60) : 0;
+            document.getElementById('avg-duration').textContent = avgDuration + ' min';
+            
+            // Create subscription plan distribution chart
+            createSubscriptionChart(logs);
+            
+            // Create source page distribution chart
+            createSourcePageChart(playEvents);
+        }
+        
+        /**
+         * Create subscription plan distribution chart
+         */
+        function createSubscriptionChart(logs) {
+            // Count users by plan
+            const planCounts = {};
+            const userPlans = {};
+            
+            logs.forEach(log => {
+                if (log.email && log.plan) {
+                    userPlans[log.email] = log.plan;
+                }
+            });
+            
+            // Count unique users by plan
+            Object.values(userPlans).forEach(plan => {
+                planCounts[plan] = (planCounts[plan] || 0) + 1;
+            });
+            
+            // Prepare chart data
+            const plans = Object.keys(planCounts);
+            const counts = Object.values(planCounts);
+            
+            // Create chart
+            const ctx = document.getElementById('subscription-chart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: plans.map(p => p.charAt(0).toUpperCase() + p.slice(1)),
+                    datasets: [{
+                        data: counts,
+                        backgroundColor: chartColors,
+                        borderColor: 'white',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                font: {
+                                    size: 14
+                                },
+                                color: '#5a3d5c'
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = Math.round((value / total) * 100);
+                                    return `${label}: ${value} users (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        /**
+         * Create source page distribution chart
+         */
+        function createSourcePageChart(playEvents) {
+            // Count plays by source page
+            const sourcePageCounts = {};
+            
+            playEvents.forEach(event => {
+                if (event.sourcePage) {
+                    const page = event.sourcePage;
+                    sourcePageCounts[page] = (sourcePageCounts[page] || 0) + 1;
+                }
+            });
+            
+            // Prepare chart data
+            const pages = Object.keys(sourcePageCounts);
+            const counts = Object.values(sourcePageCounts);
+            
+            // Create chart
+            const ctx = document.getElementById('source-chart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: pages.map(p => p.charAt(0).toUpperCase() + p.slice(1)),
+                    datasets: [{
+                        label: 'Number of Plays',
+                        data: counts,
+                        backgroundColor: chartColors[0],
+                        borderColor: chartColors[0],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        /**
+         * Generate sample data if no real data is available
+         */
+        function generateSampleData() {
+            const sampleData = [];
+            const plans = ['free', 'starter', 'plus', 'pro'];
+            const sourcePages = ['index', 'library', 'player', 'my-stories'];
+            const storyIds = ['story1', 'story2', 'story3', 'story4', 'story5'];
+            const voices = ['default', 'user'];
+            
+            // Generate 20 sample users
+            const users = [];
+            for (let i = 1; i <= 20; i++) {
+                users.push(`user${i}@example.com`);
+            }
+            
+            // Generate 100 sample play events
+            for (let i = 0; i < 100; i++) {
+                const email = users[Math.floor(Math.random() * users.length)];
+                const plan = plans[Math.floor(Math.random() * plans.length)];
+                const timestamp = Math.floor(Date.now() / 1000) - Math.floor(Math.random() * 604800); // Within last week
+                
+                sampleData.push({
+                    email: email,
+                    plan: plan,
+                    storyId: storyIds[Math.floor(Math.random() * storyIds.length)],
+                    voice: voices[Math.floor(Math.random() * voices.length)],
+                    ts: timestamp,
+                    sourcePage: sourcePages[Math.floor(Math.random() * sourcePages.length)],
+                    isMobile: Math.random() > 0.5,
+                    action: 'play'
+                });
+            }
+            
+            // Generate 80 sample completion events
+            for (let i = 0; i < 80; i++) {
+                const email = users[Math.floor(Math.random() * users.length)];
+                const plan = plans[Math.floor(Math.random() * plans.length)];
+                const timestamp = Math.floor(Date.now() / 1000) - Math.floor(Math.random() * 604800); // Within last week
+                
+                sampleData.push({
+                    email: email,
+                    plan: plan,
+                    storyId: storyIds[Math.floor(Math.random() * storyIds.length)],
+                    ts: timestamp,
+                    duration: Math.floor(Math.random() * 300) + 60, // 1-6 minutes in seconds
+                    action: 'complete'
+                });
+            }
+            
+            return sampleData;
+        }
+    </script>
+</body>
+</html>
