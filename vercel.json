@@ -1,0 +1,5 @@
+{
+    "rewrites": [
+      { "source": "/subscribe-success", "destination": "/subscribe-success.html" }
+    ]
+  }
