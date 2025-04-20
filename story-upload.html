@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Your Story - DreamTalk Box</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f9f4f9;
+            color: #5a3d5c;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            background-color: white;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+            padding: 20px 0;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 0;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #e86ed0;
+        }
+        
+        .logo span {
+            color: #a1d2ce;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #9d7e9f;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #e86ed0;
+        }
+        
+        .nav-links a.active {
+            color: #e86ed0;
+        }
+        
+        .page-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .page-title h1 {
+            font-size: 2.5rem;
+            color: #5a3d5c;
+            margin-bottom: 10px;
+        }
+        
+        .page-title p {
+            color: #9d7e9f;
+            font-size: 1.1rem;
+        }
+        
+        .upload-form {
+            background-color: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #5a3d5c;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            font-family: 'Nunito', sans-serif;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #e86ed0;
+            box-shadow: 0 0 0 3px rgba(232, 110, 208, 0.2);
+        }
+        
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        .cover-options {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .cover-option {
+            flex: 1;
+        }
+        
+        .or-divider {
+            font-weight: 600;
+            color: #9d7e9f;
+            position: relative;
+            text-align: center;
+            width: 40px;
+        }
+        
+        .or-divider::before,
+        .or-divider::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 1px;
+            height: 30px;
+            background-color: #e0e0e0;
+            transform: translateY(-50%);
+        }
+        
+        .or-divider::before {
+            left: 0;
+        }
+        
+        .or-divider::after {
+            right: 0;
+        }
+        
+        .file-input-container {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .file-input-container input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .file-input-button {
+            display: block;
+            width: 100%;
+            padding: 12px 15px;
+            background-color: #f9f4f9;
+            border: 1px dashed #e86ed0;
+            border-radius: 10px;
+            text-align: center;
+            color: #9d7e9f;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .file-input-button:hover {
+            background-color: #fcf2f7;
+            color: #e86ed0;
+        }
+        
+        .file-name {
+            margin-top: 8px;
+            font-size: 0.9rem;
+            color: #9d7e9f;
+            text-align: center;
+        }
+        
+        .select-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%239d7e9f' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 12px;
+            padding-right: 40px;
+        }
+        
+        .submit-container {
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        .btn-submit {
+            padding: 15px 50px;
+            background-color: #e86ed0;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(232, 110, 208, 0.3);
+        }
+        
+        .btn-submit:hover {
+            background-color: #d45bbe;
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(232, 110, 208, 0.4);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            background-color: white;
+            color: #9d7e9f;
+            margin-top: auto;
+        }
+        
+        .alert {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 15px 30px;
+            border-radius: 10px;
+            background-color: #a1d2ce;
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .alert.show {
+            opacity: 1;
+        }
+        
+        .cover-preview {
+            width: 100%;
+            height: 150px;
+            border-radius: 10px;
+            margin-top: 10px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border: 1px solid #e0e0e0;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 20px 0;
+            }
+            
+            .upload-form {
+                padding: 30px 20px;
+            }
+            
+            .cover-options {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .or-divider {
+                width: 100%;
+                margin: 5px 0;
+            }
+            
+            .or-divider::before,
+            .or-divider::after {
+                width: 40%;
+                height: 1px;
+                top: 50%;
+            }
+            
+            .or-divider::before {
+                left: 0;
+            }
+            
+            .or-divider::after {
+                right: 0;
+            }
+            
+            .btn-submit {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">Dream<span>Talk</span> Box</div>
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="story-library.html">Stories</a>
+                <a href="my-stories.html">My Stories</a>
+                <a href="about.html">About</a>
+            </nav>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="page-title">
+            <h1 id="page-heading">Upload Your Story</h1>
+            <p id="page-subheading">Share your magical bedtime stories with the world</p>
+        </div>
+        
+        <form id="uploadForm" class="upload-form">
+            <input type="hidden" id="storyId" name="storyId">
+            
+            <div class="form-group">
+                <label for="storyTitle">Story Title</label>
+                <input type="text" id="storyTitle" name="title" class="form-control" placeholder="Enter a captivating title" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="storyContent">Story Content</label>
+                <textarea id="storyContent" name="content" class="form-control" placeholder="Once upon a time..." required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="ageRange">Age Range</label>
+                <select id="ageRange" name="ageRange" class="form-control select-control" required>
+                    <option value="" disabled selected>Select age range</option>
+                    <option value="Ages 2-4">Ages 2-4</option>
+                    <option value="Ages 5-7">Ages 5-7</option>
+                    <option value="Ages 8+">Ages 8+</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="category">Category</label>
+                <select id="category" name="category" class="form-control select-control" required>
+                    <option value="" disabled selected>Select category</option>
+                    <option value="Bedtime">Bedtime</option>
+                    <option value="Fantasy">Fantasy</option>
+                    <option value="Animals">Animals</option>
+                    <option value="Adventure">Adventure</option>
+                    <option value="Educational">Educational</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Cover Image</label>
+                <div id="coverPreview" class="cover-preview" style="display: none;"></div>
+                <div class="cover-options">
+                    <div class="cover-option">
+                        <div class="file-input-container">
+                            <div class="file-input-button">
+                                <i class="fas fa-upload"></i> Upload Image
+                            </div>
+                            <input type="file" id="coverFile" name="coverFile" accept="image/*">
+                        </div>
+                        <div id="fileName" class="file-name">No file chosen</div>
+                    </div>
+                    
+                    <div class="or-divider">OR</div>
+                    
+                    <div class="cover-option">
+                        <input type="text" id="coverUrl" name="coverUrl" class="form-control" placeholder="Enter image URL">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="submit-container">
+                <button type="submit" class="btn-submit" id="submitButton">
+                    <i class="fas fa-paper-plane"></i> Submit Story
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    <div id="alert" class="alert"></div>
+    
+    <footer>
+        <p>© 2023 DreamTalk Box. All rights reserved.</p>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const storyId = urlParams.get('id');
+            let isEditMode = false;
+            let originalCoverData = null;
+            
+            // File input handling
+            const fileInput = document.getElementById('coverFile');
+            const fileNameDisplay = document.getElementById('fileName');
+            const coverUrlInput = document.getElementById('coverUrl');
+            const coverPreview = document.getElementById('coverPreview');
+            
+            fileInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    fileNameDisplay.textContent = this.files[0].name;
+                    
+                    // Preview the selected image
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        coverPreview.style.backgroundImage = `url(${e.target.result})`;
+                        coverPreview.style.display = 'block';
+                        coverUrlInput.value = ''; // Clear URL input when file is selected
+                    };
+                    reader.readAsDataURL(this.files[0]);
+                } else {
+                    fileNameDisplay.textContent = 'No file chosen';
+                    if (!coverUrlInput.value) {
+                        coverPreview.style.display = 'none';
+                    }
+                }
+            });
+            
+            // URL input handling
+            coverUrlInput.addEventListener('input', function() {
+                if (this.value) {
+                    coverPreview.style.backgroundImage = `url(${this.value})`;
+                    coverPreview.style.display = 'block';
+                    fileInput.value = ''; // Clear file input when URL is entered
+                    fileNameDisplay.textContent = 'No file chosen';
+                } else if (!fileInput.files[0]) {
+                    coverPreview.style.display = 'none';
+                }
+            });
+            
+            // Check if we're in edit mode
+            if (storyId) {
+                isEditMode = true;
+                
+                // Update page title for edit mode
+                document.getElementById('page-heading').innerHTML = '<i class="fas fa-edit"></i> Edit Story';
+                document.getElementById('page-subheading').textContent = 'Update your magical bedtime story';
+                document.getElementById('submitButton').innerHTML = '<i class="fas fa-save"></i> Save Changes';
+                
+                // Get story data from localStorage
+                const userStories = JSON.parse(localStorage.getItem('userStories')) || [];
+                const storyToEdit = userStories.find(story => story.id === storyId);
+                
+                if (storyToEdit) {
+                    // Populate form with story data
+                    document.getElementById('storyId').value = storyId;
+                    document.getElementById('storyTitle').value = storyToEdit.title;
+                    document.getElementById('storyContent').value = storyToEdit.content;
+                    
+                    // Set select options
+                    const ageRangeSelect = document.getElementById('ageRange');
+                    const categorySelect = document.getElementById('category');
+                    
+                    // Remove the "selected" attribute from default options
+                    Array.from(ageRangeSelect.options).forEach(option => {
+                        option.removeAttribute('selected');
+                        if (option.value === storyToEdit.ageRange) {
+                            option.selected = true;
+                        }
+                    });
+                    
+                    Array.from(categorySelect.options).forEach(option => {
+                        option.removeAttribute('selected');
+                        if (option.value === storyToEdit.category) {
+                            option.selected = true;
+                        }
+                    });
+                    
+                    // Handle cover image
+                    if (storyToEdit.cover) {
+                        originalCoverData = storyToEdit.cover;
+                        
+                        // Check if it's a URL or data URL
+                        if (storyToEdit.cover.startsWith('data:')) {
+                            // It's a data URL (uploaded file)
+                            coverPreview.style.backgroundImage = `url(${storyToEdit.cover})`;
+                            coverPreview.style.display = 'block';
+                        } else {
+                            // It's a regular URL
+                            coverUrlInput.value = storyToEdit.cover;
+                            coverPreview.style.backgroundImage = `url(${storyToEdit.cover})`;
+                            coverPreview.style.display = 'block';
+                        }
+                    }
+                } else {
+                    // Story not found
+                    showAlert('Story not found!');
+                    setTimeout(() => {
+                        window.location.href = 'my-stories.html';
+                    }, 2000);
+                }
+            }
+            
+            // Form submission
+            const uploadForm = document.getElementById('uploadForm');
+            
+            uploadForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get form values
+                const title = document.getElementById('storyTitle').value;
+                const content = document.getElementById('storyContent').value;
+                const ageRange = document.getElementById('ageRange').value;
+                const category = document.getElementById('category').value;
+                const coverFile = document.getElementById('coverFile').files[0];
+                const coverUrl = document.getElementById('coverUrl').value;
+                
+                // Validate form
+                if (!title || !content || !ageRange || !category) {
+                    showAlert('Please fill in all required fields');
+                    return;
+                }
+                
+                if (!coverFile && !coverUrl && !originalCoverData) {
+                    showAlert('Please provide a cover image or URL');
+                    return;
+                }
+                
+                // Process cover image
+                if (coverFile) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        const coverData = e.target.result;
+                        if (isEditMode) {
+                            updateStory(title, content, ageRange, category, coverData);
+                        } else {
+                            saveNewStory(title, content, ageRange, category, coverData);
+                        }
+                    };
+                    
+                    reader.readAsDataURL(coverFile);
+                } else if (coverUrl) {
+                    if (isEditMode) {
+                        updateStory(title, content, ageRange, category, coverUrl);
+                    } else {
+                        saveNewStory(title, content, ageRange, category, coverUrl);
+                    }
+                } else if (originalCoverData) {
+                    // Keep the original cover in edit mode
+                    updateStory(title, content, ageRange, category, originalCoverData);
+                }
+            });
+            
+            // Function to save new story to localStorage
+            function saveNewStory(title, content, ageRange, category, cover) {
+                // Get existing stories or initialize empty array
+                const userStories = JSON.parse(localStorage.getItem('userStories')) || [];
+                
+                // Create new story object
+                const newStory = {
+                    id: generateId(),
+                    title: title,
+                    content: content,
+                    ageRange: ageRange,
+                    category: category,
+                    cover: cover,
+                    createdAt: new Date().toISOString(),
+                    isCustom: true
+                };
+                
+                // Add new story to array
+                userStories.push(newStory);
+                
+                // Save updated array to localStorage
+                localStorage.setItem('userStories', JSON.stringify(userStories));
+                
+                // Show success message
+                showAlert('Story uploaded successfully!');
+                
+                // Redirect to my-stories page after a short delay
+                setTimeout(function() {
+                    window.location.href = 'my-stories.html';
+                }, 1500);
+            }
+            
+            // Function to update existing story
+            function updateStory(title, content, ageRange, category, cover) {
+                // Get existing stories
+                const userStories = JSON.parse(localStorage.getItem('userStories')) || [];
+                const storyId = document.getElementById('storyId').value;
+                
+                // Find the story to update
+                const storyIndex = userStories.findIndex(story => story.id === storyId);
+                
+                if (storyIndex !== -1) {
+                    // Update story properties
+                    userStories[storyIndex].title = title;
+                    userStories[storyIndex].content = content;
+                    userStories[storyIndex].ageRange = ageRange;
+                    userStories[storyIndex].category = category;
+                    userStories[storyIndex].cover = cover;
+                    userStories[storyIndex].updatedAt = new Date().toISOString();
+                    
+                    // Save updated array to localStorage
+                    localStorage.setItem('userStories', JSON.stringify(userStories));
+                    
+                    // Show success message
+                    showAlert('Story updated successfully!');
+                    
+                    // Redirect to my-stories page after a short delay
+                    setTimeout(function() {
+                        window.location.href = 'my-stories.html';
+                    }, 1500);
+                } else {
+                    showAlert('Error: Story not found!');
+                }
+            }
+            
+            // Function to generate a unique ID
+            function generateId() {
+                return 'story_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            }
+            
+            // Function to show alert message
+            function showAlert(message) {
+                const alert = document.getElementById('alert');
+                alert.textContent = message;
+                alert.classList.add('show');
+                
+                setTimeout(function() {
+                    alert.classList.remove('show');
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>

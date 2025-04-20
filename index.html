@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamTalk Box - Bedtime Stories with Your Voice</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial Rounded MT Bold', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #fcf2f7;
+            color: #5a3d5c;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            position: relative;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #e86ed0;
+            margin-bottom: 10px;
+            display: inline-block;
+            position: relative;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            animation: twinkle 2s ease-in-out infinite;
+        }
+        
+        @keyframes twinkle {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            color: #9d7e9f;
+            margin-bottom: 30px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border-radius: 50px;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn i {
+            margin-right: 10px;
+            font-size: 1.3rem;
+        }
+        
+        .btn-primary {
+            background-color: #e86ed0;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #d64bbd;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(232, 110, 208, 0.3);
+        }
+        
+        .btn-secondary {
+            background-color: #a1d2ce;
+            color: #3a6f6a;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #8bc4bf;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(161, 210, 206, 0.3);
+        }
+        
+        .story-section {
+            margin: 50px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+            color: #5a3d5c;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: "";
+            display: block;
+            width: 80px;
+            height: 4px;
+            background-color: #e86ed0;
+            margin: 10px auto;
+            border-radius: 2px;
+        }
+        
+        .story-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .story-card {
+            background-color: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .story-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .story-image {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .story-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .story-card:hover .story-image img {
+            transform: scale(1.05);
+        }
+        
+        .story-content {
+            padding: 20px;
+        }
+        
+        .story-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #5a3d5c;
+        }
+        
+        .story-description {
+            color: #9d7e9f;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .story-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+        }
+        
+        .story-age {
+            font-size: 0.8rem;
+            color: #a1d2ce;
+            font-weight: bold;
+        }
+        
+        .story-play {
+            color: #e86ed0;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .story-play:hover {
+            color: #d64bbd;
+            transform: scale(1.2);
+        }
+        
+        .how-it-works {
+            background-color: white;
+            padding: 50px 30px;
+            border-radius: 30px;
+            margin: 50px 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+        
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .step {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .step-icon {
+            width: 80px;
+            height: 80px;
+            background-color: #fcf2f7;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2rem;
+            color: #e86ed0;
+        }
+        
+        .step-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #5a3d5c;
+        }
+        
+        .step-description {
+            color: #9d7e9f;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: #9d7e9f;
+            font-size: 0.9rem;
+            margin-top: 50px;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .footer-link {
+            color: #5a3d5c;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-link:hover {
+            color: #e86ed0;
+        }
+        
+        @media (max-width: 768px) {
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+            
+            .story-cards {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-moon"></i> DreamTalk Box
+            </div>
+            <p class="tagline">Bedtime stories in your voice, creating magical dreams for your little ones</p>
+        </header>
+        
+        <div class="action-buttons">
+            <a href="record.html" class="btn btn-primary">
+                <i class="fas fa-microphone"></i> Record Your Voice
+            </a>
+            <a href="story-upload.html" class="btn btn-secondary">
+                <i class="fas fa-upload"></i> Upload Your Story
+            </a>
+        </div>
+        
+        <section class="story-section">
+            <h2 class="section-title">Featured Stories</h2>
+            <div class="story-cards" id="storyList">
+                <!-- 动态加载故事会自动插入 -->
+              </div>
+                
+                
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="story-library.html" class="btn btn-secondary">
+                    <i class="fas fa-book"></i> View All Stories
+                </a>
+            </div>
+        </section>
+        
+        <section class="how-it-works">
+            <h2 class="section-title">How It Works</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-icon">
+                        <i class="fas fa-microphone"></i>
+                    </div>
+                    <h3 class="step-title">Record Your Voice</h3>
+                    <p class="step-description">Spend just a minute recording your voice, and our AI will learn to speak just like you.</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h3 class="step-title">Choose a Story</h3>
+                    <p class="step-description">Select from our library of bedtime stories or upload your own special tales.</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-icon">
+                        <i class="fas fa-moon"></i>
+                    </div>
+                    <h3 class="step-title">Sweet Dreams</h3>
+                    <p class="step-description">Play the story in your voice to create a soothing bedtime routine for your child.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 在<div class="input-group">...</div>之后，<div id="storyList">...</div>之前插入 -->
+        
+        <!-- User Guide and Features Section -->
+        <div class="info-section">
+        <!-- How to Use Section -->
+        <div class="info-card guide-card">
+        <h3 class="info-title"><i class="fas fa-book-reader"></i> How to Use</h3>
+        <ul class="info-list">
+        <li><i class="fas fa-book"></i> This app supports story reading by system voice or your customized voice</li>
+        <li><i class="fas fa-microphone"></i> You can upload a recording or record your voice directly online</li>
+        <li><i class="fas fa-edit"></i> You can upload or edit your own stories alongside system stories</li>
+        <li><i class="fas fa-sync"></i> All stories support loop playback and AI voice synthesis</li>
+        </ul>
+        </div>
+        
+        <!-- Features Section -->
+        <div class="info-card features-card">
+        <h3 class="info-title"><i class="fas fa-star"></i> Features</h3>
+        <ul class="info-list">
+        <li><i class="fas fa-check-circle"></i> Clone your voice to read children's stories</li>
+        <li><i class="fas fa-check-circle"></i> Support 20+ built-in stories + user-defined uploads</li>
+        <li><i class="fas fa-check-circle"></i> Stories with cover images, supporting system/user voice switching</li>
+        <li><i class="fas fa-check-circle"></i> No registration required, easy to use for all parents</li>
+        </ul>
+        </div>
+        </div>
+        
+        <style>
+        /* Info Section Styles */
+        .info-section {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        margin: 30px 0;
+        width: 100%;
+        }
+        
+        .info-card {
+        background-color: #fce4ec;
+        border-radius: 20px;
+        padding: 25px;
+        box-shadow: 0 8px 20px rgba(232, 110, 208, 0.15);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .info-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 25px rgba(232, 110, 208, 0.25);
+        }
+        
+        .info-title {
+        color: #e86ed0;
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        }
+        
+        .info-title i {
+        margin-right: 10px;
+        }
+        
+        .info-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        }
+        
+        .info-list li {
+        padding: 10px 0;
+        display: flex;
+        align-items: flex-start;
+        line-height: 1.5;
+        color: #5a3d5c;
+        }
+        
+        .info-list li i {
+        color: #e86ed0;
+        margin-right: 12px;
+        font-size: 1.1rem;
+        margin-top: 3px;
+        }
+        
+        /* Responsive adjustments */
+        @media (min-width: 768px) {
+        .info-section {
+        flex-direction: row;
+        }
+        
+        .info-card {
+        flex: 1;
+        }
+        }
+        
+        @media (max-width: 767px) {
+        .info-card {
+        padding: 20px;
+        }
+        
+        .info-title {
+        font-size: 1.3rem;
+        }
+        
+        .info-list li {
+        font-size: 0.95rem;
+        }
+        }
+        </style>
+        
+        <footer>
+            <div class="footer-links">
+                <a href="#" class="footer-link">About Us</a>
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="#" class="footer-link">Terms of Service</a>
+                <a href="#" class="footer-link">Contact</a>
+            </div>
+            <p>© 2023 DreamTalk Box. All rights reserved.</p>
+        </footer>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animation for story cards on scroll
+            const storyCards = document.querySelectorAll('.story-card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            storyCards.forEach(card => {
+                card.style.opacity = 0;
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(card);
+            });
+        });
+        
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const storyList = document.getElementById('storyList');
+            
+            try {
+                // 1. 加载系统故事
+                const response = await fetch('stories.json');
+                const systemStories = await response.json();
+                
+                // 2. 加载用户故事
+                let userStories = [];
+                try {
+                    const userStoriesData = localStorage.getItem('userStories');
+                    if (userStoriesData) {
+                        userStories = JSON.parse(userStoriesData);
+                    }
+                } catch (error) {
+                    console.warn('Failed to load user stories:', error);
+                    // 如果解析失败，继续使用空数组
+                }
+                
+                // 3. 合并故事并限制数量为8个
+                // 系统故事优先，然后是用户故事
+                const allStories = [...systemStories, ...userStories].slice(0, 8);
+                
+                // 清空占位内容
+                storyList.innerHTML = '';
+                
+                // 4. 渲染故事卡片
+                allStories.forEach(story => {
+                    const card = document.createElement('div');
+                    card.className = 'story-card';
+                    
+                    // 设置点击事件
+                    card.onclick = () => location.href = `story-player.html?id=${story.id}`;
+                    
+                    // 处理封面图片 - 系统故事可能使用 cover 或 coverImage
+                    const coverImage = story.cover || story.coverImage || 'covers/default.jpg';
+                    
+                    // 处理故事内容 - 确保有内容且截取前100个字符
+                    const content = story.content ? story.content.substring(0, 100) + '...' : 'No description available...';
+                    
+                    // 处理年龄范围
+                    const ageRange = story.ageRange || 'Age 3+';
+                    
+                    // 构建卡片HTML
+                    card.innerHTML = `
+                        <div class="story-image">
+                            <img src="${coverImage}" alt="${story.title}" onerror="this.src='covers/default.jpg'">
+                        </div>
+                        <div class="story-content">
+                            <h3 class="story-title">${story.title}</h3>
+                            <p class="story-description">${content}</p>
+                            <div class="story-footer">
+                                <span class="story-age">${ageRange}</span>
+                                <i class="fas fa-play-circle story-play"></i>
+                            </div>
+                        </div>
+                    `;
+                    
+                    storyList.appendChild(card);
+                });
+                
+                // 如果没有故事可显示
+                if (allStories.length === 0) {
+                    storyList.innerHTML = '<p style="text-align: center; width: 100%;">No stories available. Try adding your own!</p>';
+                }
+                
+            } catch (err) {
+                console.error('Failed to load stories:', err);
+                storyList.innerHTML = '<p style="text-align: center; width: 100%;">Failed to load stories. Please try again later.</p>';
+            }
+        });
+        </script>
+</body>
+</html>

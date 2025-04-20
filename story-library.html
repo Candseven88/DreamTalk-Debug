@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamTalk Box - Story Library</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f9f4f9;
+            color: #5a3d5c;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            background-color: white;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+            padding: 20px 0;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #e86ed0;
+        }
+        
+        .logo span {
+            color: #a1d2ce;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #9d7e9f;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #e86ed0;
+        }
+        
+        .nav-links a.active {
+            color: #e86ed0;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 50px 0;
+        }
+        
+        .page-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .page-title h1 {
+            font-size: 2.5rem;
+            color: #5a3d5c;
+            margin-bottom: 10px;
+        }
+        
+        .page-title p {
+            color: #9d7e9f;
+            font-size: 1.1rem;
+        }
+        
+        .library-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .filter-options {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-option {
+            padding: 8px 20px;
+            background-color: white;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #9d7e9f;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .filter-option:hover {
+            background-color: #fcf2f7;
+            color: #e86ed0;
+        }
+        
+        .filter-option.active {
+            background-color: #e86ed0;
+            color: white;
+        }
+        
+        .search-box {
+            position: relative;
+        }
+        
+        .search-box input {
+            padding: 10px 20px 10px 45px;
+            border-radius: 50px;
+            border: none;
+            width: 250px;
+            font-size: 0.9rem;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9d7e9f;
+        }
+        
+        .story-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+            min-height: 600px; /* Ensure consistent height between page changes */
+        }
+        
+        .story-card {
+            background-color: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .story-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .story-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: #a1d2ce;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 1;
+        }
+        
+        .story-badge.custom {
+            background-color: #e86ed0;
+        }
+        
+        .story-image {
+            height: 180px;
+            overflow: hidden;
+        }
+        
+        .story-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .story-card:hover .story-image img {
+            transform: scale(1.1);
+        }
+        
+        .story-content {
+            padding: 20px;
+        }
+        
+        .story-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #5a3d5c;
+        }
+        
+        .story-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 0.85rem;
+            color: #9d7e9f;
+        }
+        
+        .story-category {
+            background-color: #fcf2f7;
+            color: #e86ed0;
+            padding: 3px 10px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .story-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .story-play {
+            width: 40px;
+            height: 40px;
+            background-color: #e86ed0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .story-card:hover .story-play {
+            background-color: #d45bbe;
+            transform: scale(1.1);
+        }
+        
+        .story-options {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9d7e9f;
+            transition: all 0.3s ease;
+        }
+        
+        .story-options:hover {
+            background-color: #f9f4f9;
+            color: #5a3d5c;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        
+        .page-item {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            border-radius: 50%;
+            font-weight: 600;
+            color: #9d7e9f;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .page-item:hover {
+            background-color: #fcf2f7;
+            color: #e86ed0;
+        }
+        
+        .page-item.active {
+            background-color: #e86ed0;
+            color: white;
+        }
+        
+        .page-item.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            background-color: white;
+            color: #9d7e9f;
+            margin-top: auto;
+        }
+        
+        .error-message {
+            text-align: center;
+            padding: 30px;
+            background-color: #fff0f0;
+            border-radius: 10px;
+            color: #e86ed0;
+            font-size: 1.1rem;
+            margin: 20px 0;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(232, 110, 208, 0.2);
+            border-radius: 50%;
+            border-top-color: #e86ed0;
+            animation: spin 1s ease-in-out infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .story-preview {
+            margin-bottom: 15px;
+            color: #9d7e9f;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        @media (max-width: 768px) {
+            .library-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .filter-options {
+                justify-content: center;
+            }
+            
+            .search-box {
+                width: 100%;
+            }
+            
+            .search-box input {
+                width: 100%;
+            }
+            
+            .story-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">Dream<span>Talk</span> Box</div>
+                <nav class="nav-links">
+                    <a href="index.html">Home</a>
+                    <a href="story-library.html" class="active">Stories</a>
+                    <a href="my-stories.html">My Stories</a>
+                    <a href="about.html">About</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+    
+    <div class="main-content">
+        <div class="container">
+            <div class="page-title">
+                <h1>Bedtime Story Library</h1>
+                <p>Discover magical stories to help your little ones drift into dreamland</p>
+            </div>
+            
+            <div class="library-controls">
+                <div class="filter-options">
+                    <div class="filter-option active">All Stories</div>
+                    <div class="filter-option">Ages 2-4</div>
+                    <div class="filter-option">Ages 5-7</div>
+                    <div class="filter-option">Ages 8+</div>
+                    <div class="filter-option">Fantasy</div>
+                    <div class="filter-option">Animals</div>
+                </div>
+                
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search stories...">
+                </div>
+            </div>
+            
+            <div id="loading" class="loading">
+                <div class="loading-spinner"></div>
+                <p>Loading stories...</p>
+            </div>
+            
+            <div class="story-grid" id="storyList">
+                <!-- Stories will be dynamically loaded here -->
+            </div>
+            
+            <div class="pagination" id="pagination">
+                <!-- Pagination will be dynamically generated here -->
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>© 2023 DreamTalk Box. All rights reserved.</p>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Global variables
+            const storiesPerPage = 8;
+            let allStories = [];
+            let filteredStories = [];
+            let currentPage = 1;
+            let totalPages = 0;
+            
+            // Load stories from JSON file and localStorage
+            loadStories();
+            
+            // Filter options functionality
+            const filterOptions = document.querySelectorAll('.filter-option');
+            
+            filterOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove active class from all options
+                    filterOptions.forEach(opt => opt.classList.remove('active'));
+                    
+                    // Add active class to clicked option
+                    this.classList.add('active');
+                    
+                    // Filter stories based on the selected option
+                    const filter = this.textContent.trim();
+                    filterStories(filter);
+                });
+            });
+            
+            // Search functionality
+            const searchInput = document.querySelector('.search-box input');
+            
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                if (searchTerm === '') {
+                    // If search is cleared, reset to current filter
+                    const activeFilter = document.querySelector('.filter-option.active').textContent.trim();
+                    filterStories(activeFilter);
+                    return;
+                }
+                
+                // Filter stories based on search term
+                filteredStories = allStories.filter(story => {
+                    const title = story.title.toLowerCase();
+                    const content = story.content ? story.content.toLowerCase() : '';
+                    return title.includes(searchTerm) || content.includes(searchTerm);
+                });
+                
+                // Reset to first page and update display
+                currentPage = 1;
+                updatePagination();
+                displayStories();
+            });
+            
+            // Function to load stories from stories.json and localStorage
+            async function loadStories() {
+                const storyGrid = document.getElementById('storyList');
+                const loadingElement = document.getElementById('loading');
+                
+                try {
+                    // Load system stories from JSON file
+                    const response = await fetch('stories.json');
+                    
+                    if (!response.ok) {
+                        throw new Error('Failed to load stories');
+                    }
+                    
+                    const systemStories = await response.json();
+                    
+                    // Load user stories from localStorage
+                    const userStories = JSON.parse(localStorage.getItem('userStories')) || [];
+                    
+                    // Mark system stories and user stories
+                    systemStories.forEach(story => {
+                        story.isCustom = false;
+                    });
+                    
+                    userStories.forEach(story => {
+                        story.isCustom = true;
+                    });
+                    
+                    // Combine system and user stories
+                    allStories = [...systemStories, ...userStories];
+                    filteredStories = [...allStories]; // Create a copy for filtering
+                    
+                    // Hide loading indicator
+                    loadingElement.style.display = 'none';
+                    
+                    // Calculate total pages
+                    updatePagination();
+                    
+                    // Display first page of stories
+                    displayStories();
+                    
+                } catch (error) {
+                    console.error('Error loading stories:', error);
+                    
+                    // Try to load user stories if system stories fail
+                    try {
+                        const userStories = JSON.parse(localStorage.getItem('userStories')) || [];
+                        userStories.forEach(story => {
+                            story.isCustom = true;
+                        });
+                        
+                        if (userStories.length > 0) {
+                            allStories = [...userStories];
+                            filteredStories = [...allStories];
+                            
+                            // Hide loading indicator
+                            loadingElement.style.display = 'none';
+                            
+                            // Calculate total pages
+                            updatePagination();
+                            
+                            // Display first page of stories
+                            displayStories();
+                            return;
+                        }
+                    } catch (e) {
+                        console.error('Error loading user stories:', e);
+                    }
+                    
+                    // Hide loading indicator
+                    loadingElement.style.display = 'none';
+                    
+                    // Show error message
+                    const errorMessage = document.createElement('div');
+                    errorMessage.className = 'error-message';
+                    errorMessage.textContent = 'Failed to load stories. Please try again later.';
+                    storyGrid.innerHTML = '';
+                    storyGrid.appendChild(errorMessage);
+                    
+                    // Hide pagination
+                    document.getElementById('pagination').style.display = 'none';
+                }
+            }
+            
+            // Function to create a story card
+            function createStoryCard(story) {
+                const storyCard = document.createElement('div');
+                storyCard.className = 'story-card';
+                storyCard.setAttribute('data-id', story.id);
+                
+                // Add click event to navigate to story player
+                storyCard.addEventListener('click', function() {
+                    window.location.href = `story-player.html?id=${story.id}`;
+                });
+                
+                // Create badge
+                const badge = document.createElement('div');
+                badge.className = story.isCustom ? 'story-badge custom' : 'story-badge';
+                badge.textContent = story.isCustom ? 'Custom' : 'System';
+                storyCard.appendChild(badge);
+                
+                // Create image container
+                const imageContainer = document.createElement('div');
+                imageContainer.className = 'story-image';
+                
+                const image = document.createElement('img');
+                
+                // 修复图片路径问题
+                let coverImage = story.cover || story.coverImage || 'covers/default.jpg';
+                
+                // 如果不是以 http, https 或 data: 开头，且不是以 / 开头，则添加 / 前缀
+                if (coverImage && 
+                    !coverImage.startsWith('http') && 
+                    !coverImage.startsWith('https') && 
+                    !coverImage.startsWith('data:') && 
+                    !coverImage.startsWith('/')) {
+                    coverImage = '/' + coverImage;
+                }
+                
+                image.src = coverImage;
+                image.alt = story.title;
+                
+                // 添加图片加载失败处理
+                image.onerror = function() {
+                    this.src = '/covers/default.jpg';
+                };
+                
+                imageContainer.appendChild(image);
+                storyCard.appendChild(imageContainer);
+                
+                // Create content container
+                const contentContainer = document.createElement('div');
+                contentContainer.className = 'story-content';
+                
+                // Add title
+                const title = document.createElement('h3');
+                title.className = 'story-title';
+                title.textContent = story.title;
+                contentContainer.appendChild(title);
+                
+                // Add meta info
+                const meta = document.createElement('div');
+                meta.className = 'story-meta';
+                
+                const ageSpan = document.createElement('span');
+                ageSpan.textContent = story.ageRange || 'All Ages';
+                meta.appendChild(ageSpan);
+                
+                const category = document.createElement('div');
+                category.className = 'story-category';
+                category.textContent = story.category || 'Bedtime';
+                meta.appendChild(category);
+                
+                contentContainer.appendChild(meta);
+                
+                // Add story preview
+                if (story.content) {
+                    const preview = document.createElement('p');
+                    preview.className = 'story-preview';
+                    preview.textContent = story.content.substring(0, 80) + '...';
+                    contentContainer.appendChild(preview);
+                }
+                
+                // Add actions
+                const actions = document.createElement('div');
+                actions.className = 'story-actions';
+                
+                const playButton = document.createElement('div');
+                playButton.className = 'story-play';
+                playButton.innerHTML = '<i class="fas fa-play"></i>';
+                actions.appendChild(playButton);
+                
+                const options = document.createElement('div');
+                options.className = 'story-options';
+                options.innerHTML = '<i class="fas fa-ellipsis-v"></i>';
+                
+                // Prevent propagation for options button
+                options.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    // Options menu functionality could be added here
+                });
+                
+                actions.appendChild(options);
+                contentContainer.appendChild(actions);
+                
+                storyCard.appendChild(contentContainer);
+                
+                return storyCard;
+            }
+            
+            // Function to filter stories
+            function filterStories(filter) {
+                if (filter === 'All Stories') {
+                    filteredStories = [...allStories];
+                } else {
+                    filteredStories = allStories.filter(story => {
+                        // Get category and age range from story
+                        const category = story.category || 'Bedtime';
+                        const ageRange = story.ageRange || 'All Ages';
+                        
+                        return filter === category || filter === ageRange ||
+                            (filter === 'Ages 2-4' && ageRange.includes('2-4')) ||
+                            (filter === 'Ages 5-7' && ageRange.includes('5-7')) ||
+                            (filter === 'Ages 8+' && ageRange.includes('8+')) ||
+                            (filter === 'Fantasy' && category.includes('Fantasy')) ||
+                            (filter === 'Animals' && category.includes('Animals'));
+                    });
+                }
+                
+                // Reset to first page and update display
+                currentPage = 1;
+                updatePagination();
+                displayStories();
+            }
+            
+            // Function to display stories for the current page
+            function displayStories() {
+                const storyGrid = document.getElementById('storyList');
+                storyGrid.innerHTML = '';
+                
+                if (filteredStories.length === 0) {
+                    const noResults = document.createElement('div');
+                    noResults.className = 'error-message';
+                    noResults.textContent = 'No stories found matching your criteria.';
+                    storyGrid.appendChild(noResults);
+                    return;
+                }
+                
+                // Calculate start and end indices for current page
+                const startIndex = (currentPage - 1) * storiesPerPage;
+                const endIndex = Math.min(startIndex + storiesPerPage, filteredStories.length);
+                
+                // Get stories for current page
+                const currentStories = filteredStories.slice(startIndex, endIndex);
+                
+                // Create and append story cards
+                currentStories.forEach(story => {
+                    const storyCard = createStoryCard(story);
+                    storyGrid.appendChild(storyCard);
+                });
+            }
+            
+            // Function to update pagination
+            function updatePagination() {
+                const paginationContainer = document.getElementById('pagination');
+                
+                // Calculate total pages
+                totalPages = Math.ceil(filteredStories.length / storiesPerPage);
+                
+                // Clear pagination container
+                paginationContainer.innerHTML = '';
+                
+                // Only show pagination if there's more than one page
+                if (totalPages <= 1) {
+                    paginationContainer.style.display = 'none';
+                    return;
+                }
+                
+                paginationContainer.style.display = 'flex';
+                
+                // Add previous button
+                const prevButton = document.createElement('div');
+                prevButton.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+                prevButton.innerHTML = '<i class="fas fa-chevron-left"></i>';
+                
+                if (currentPage > 1) {
+                    prevButton.addEventListener('click', function() {
+                        currentPage--;
+                        updatePagination();
+                        displayStories();
+                        // Scroll to top of story grid
+                        document.getElementById('storyList').scrollIntoView({ behavior: 'smooth' });
+                    });
+                }
+                
+                paginationContainer.appendChild(prevButton);
+                
+                // Determine which page numbers to show
+                let startPage = Math.max(1, currentPage - 2);
+                let endPage = Math.min(totalPages, startPage + 4);
+                
+                // Adjust if we're near the end
+                if (endPage - startPage < 4) {
+                    startPage = Math.max(1, endPage - 4);
+                }
+                
+                // Add page numbers
+                for (let i = startPage; i <= endPage; i++) {
+                    const pageButton = document.createElement('div');
+                    pageButton.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                    pageButton.textContent = i;
+                    
+                    if (i !== currentPage) {
+                        pageButton.addEventListener('click', function() {
+                            currentPage = i;
+                            updatePagination();
+                            displayStories();
+                            // Scroll to top of story grid
+                            document.getElementById('storyList').scrollIntoView({ behavior: 'smooth' });
+                        });
+                    }
+                    
+                    paginationContainer.appendChild(pageButton);
+                }
+                
+                // Add next button
+                const nextButton = document.createElement('div');
+                nextButton.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+                nextButton.innerHTML = '<i class="fas fa-chevron-right"></i>';
+                
+                if (currentPage < totalPages) {
+                    nextButton.addEventListener('click', function() {
+                        currentPage++;
+                        updatePagination();
+                        displayStories();
+                        // Scroll to top of story grid
+                        document.getElementById('storyList').scrollIntoView({ behavior: 'smooth' });
+                    });
+                }
+                
+                paginationContainer.appendChild(nextButton);
+            }
+        });
+    </script>
+</body>
+</html>
