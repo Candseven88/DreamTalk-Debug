@@ -1,5 +1,6 @@
 {
     "rewrites": [
-      { "source": "/subscribe-success", "destination": "/subscribe-success.html" }
+      { "source": "/subscribe-success", "destination": "/subscribe-success.html" },
+      { "source": "/pricing", "destination": "/pricing.html" }
     ]
   }

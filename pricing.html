@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Plans - DreamTalk Box</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial Rounded MT Bold', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #fcf2f7;
+            color: #5a3d5c;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #e86ed0;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+        }
+        
+        .page-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .page-title h1 {
+            font-size: 2.5rem;
+            color: #5a3d5c;
+            margin-bottom: 15px;
+        }
+        
+        .page-title p {
+            font-size: 1.2rem;
+            color: #9d7e9f;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .plans-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .plan-card {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            padding: 30px;
+            width: 100%;
+            max-width: 280px;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .plan-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .plan-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .plan-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #5a3d5c;
+            text-align: center;
+        }
+        
+        .plan-price {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #e86ed0;
+            text-align: center;
+        }
+        
+        .plan-features {
+            list-style: none;
+            margin-bottom: 30px;
+            flex: 1;
+        }
+        
+        .plan-features li {
+            margin-bottom: 12px;
+            padding-left: 30px;
+            position: relative;
+            line-height: 1.5;
+        }
+        
+        .plan-features li i {
+            position: absolute;
+            left: 0;
+            top: 3px;
+        }
+        
+        .plan-features .feature-check {
+            color: #4CAF50;
+        }
+        
+        .plan-features .feature-times {
+            color: #F44336;
+        }
+        
+        .plan-button {
+            padding: 12px 20px;
+            border-radius: 50px;
+            border: none;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .btn-current {
+            background-color: #f0f9ff;
+            color: #3182ce;
+            cursor: default;
+        }
+        
+        .btn-starter {
+            background: linear-gradient(135deg, #4CAF50, #8BC34A);
+            color: white;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+        
+        .btn-starter:hover {
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+            transform: translateY(-3px);
+        }
+        
+        .btn-plus {
+            background: linear-gradient(135deg, #9C27B0, #673AB7);
+            color: white;
+            box-shadow: 0 4px 15px rgba(156, 39, 176, 0.3);
+        }
+        
+        .btn-plus:hover {
+            box-shadow: 0 6px 20px rgba(156, 39, 176, 0.4);
+            transform: translateY(-3px);
+        }
+        
+        .btn-pro {
+            background: linear-gradient(135deg, #FF9800, #FF5722);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+        }
+        
+        .btn-pro:hover {
+            box-shadow: 0 6px 20px rgba(255, 152, 0, 0.4);
+            transform: translateY(-3px);
+        }
+        
+        .home-button-container {
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .home-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px 30px;
+            background-color: #e86ed0;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(232, 110, 208, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .home-button:hover {
+            background-color: #d64bbd;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(232, 110, 208, 0.4);
+        }
+        
+        .home-button i {
+            margin-right: 10px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: #9d7e9f;
+            font-size: 0.9rem;
+            background-color: white;
+            margin-top: auto;
+        }
+        
+        @media (max-width: 1200px) {
+            .plans-container {
+                gap: 20px;
+            }
+            
+            .plan-card {
+                max-width: 260px;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .plans-container {
+                gap: 15px;
+            }
+            
+            .plan-card {
+                max-width: 220px;
+                padding: 20px;
+            }
+            
+            .plan-name {
+                font-size: 1.3rem;
+            }
+            
+            .plan-price {
+                font-size: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .plans-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .plan-card {
+                max-width: 100%;
+                width: 100%;
+                max-width: 350px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="index.html" class="logo">
+                <i class="fas fa-moon"></i> DreamTalk Box
+            </a>
+        </header>
+        
+        <div class="page-title">
+            <h1>Choose Your Plan</h1>
+            <p>Select the perfect subscription plan for your storytelling needs. Upgrade anytime to unlock more features.</p>
+        </div>
+        
+        <div class="plans-container">
+            <!-- Free Plan -->
+            <div class="plan-card">
+                <div class="plan-icon">📦</div>
+                <h2 class="plan-name">Free</h2>
+                <div class="plan-price">$0/mo</div>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check feature-check"></i> 🌱 Plan: Free</li>
+                    <li><i class="fas fa-check feature-check"></i> 5 story plays/day</li>
+                    <li><i class="fas fa-check feature-check"></i> Built-in stories only</li>
+                    <li><i class="fas fa-times feature-times"></i> No voice cloning</li>
+                    <li><i class="fas fa-times feature-times"></i> No custom uploads</li>
+                </ul>
+                <button class="plan-button btn-current" disabled>✅ Current Plan</button>
+            </div>
+            
+            <!-- Starter Plan -->
+            <div class="plan-card">
+                <div class="plan-icon">🔰</div>
+                <h2 class="plan-name">Starter</h2>
+                <div class="plan-price">$4.99/mo</div>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check feature-check"></i> 30 plays/day</li>
+                    <li><i class="fas fa-check feature-check"></i> 1 custom voice</li>
+                    <li><i class="fas fa-check feature-check"></i> Upload 5 stories</li>
+                    <li><i class="fas fa-times feature-times"></i> Priority support</li>
+                </ul>
+                <a href="https://www.creem.io/payment/prod_4MFFcp902Sp1aXMWsBSuRG" class="plan-button btn-starter" onclick="handlePayment('starter')">Upgrade to Starter</a>
+            </div>
+            
+            <!-- Plus Plan -->
+            <div class="plan-card">
+                <div class="plan-icon">🚀</div>
+                <h2 class="plan-name">Plus</h2>
+                <div class="plan-price">$19.99/mo</div>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check feature-check"></i> 100 plays/day</li>
+                    <li><i class="fas fa-check feature-check"></i> 3 custom voices</li>
+                    <li><i class="fas fa-check feature-check"></i> Upload 20 stories</li>
+                    <li><i class="fas fa-check feature-check"></i> Priority support</li>
+                </ul>
+                <a href="https://www.creem.io/payment/prod_m0Fosk4j2ceapiwZkf5Wg" class="plan-button btn-plus" onclick="handlePayment('plus')">Upgrade to Plus</a>
+            </div>
+            
+            <!-- Pro Plan -->
+            <div class="plan-card">
+                <div class="plan-icon">👑</div>
+                <h2 class="plan-name">Pro</h2>
+                <div class="plan-price">$49.99/mo</div>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check feature-check"></i> Unlimited plays</li>
+                    <li><i class="fas fa-check feature-check"></i> Unlimited voice clones</li>
+                    <li><i class="fas fa-check feature-check"></i> Unlimited stories</li>
+                    <li><i class="fas fa-check feature-check"></i> AI enhancement + Priority support</li>
+                </ul>
+                <a href="https://www.creem.io/payment/prod_4Tezu3Ozv3ETbXMolp2dYr" class="plan-button btn-pro" onclick="handlePayment('pro')">Upgrade to Pro</a>
+            </div>
+        </div>
+        
+        <div class="home-button-container">
+            <a href="index.html" class="home-button">
+                <i class="fas fa-home"></i> Return to Home
+            </a>
+        </div>
+    </div>
+    
+    <footer>
+        <p>© 2023 DreamTalk Box. All rights reserved.</p>
+    </footer>
+    
+    <!-- 订阅等级浮标 -->
+    <div id="subscription-badge" style="position: fixed; top: 15px; right: 15px; padding: 8px 12px; border-radius: 20px; font-size: 14px; font-weight: 500; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 1000; background-color: #f8f0ff; color: #6b46c1; transition: all 0.3s ease;"></div>
+
+    <script>
+        // 检查当前用户订阅计划并更新UI
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取当前用户计划
+            const userPlan = localStorage.getItem('userPlan') || 'free';
+            
+            // 更新当前计划按钮状态
+            const planButtons = document.querySelectorAll('.plan-button');
+            
+            // 根据用户当前计划禁用相应按钮
+            if (userPlan === 'free') {
+                planButtons[0].innerHTML = '✅ Current Plan';
+                planButtons[0].disabled = true;
+            } else if (userPlan === 'starter') {
+                planButtons[0].innerHTML = 'Downgrade';
+                planButtons[1].innerHTML = '✅ Current Plan';
+                planButtons[1].disabled = true;
+                planButtons[1].className = 'plan-button btn-current';
+            } else if (userPlan === 'plus') {
+                planButtons[0].innerHTML = 'Downgrade';
+                planButtons[2].innerHTML = '✅ Current Plan';
+                planButtons[2].disabled = true;
+                planButtons[2].className = 'plan-button btn-current';
+            } else if (userPlan === 'pro') {
+                planButtons[0].innerHTML = 'Downgrade';
+                planButtons[3].innerHTML = '✅ Current Plan';
+                planButtons[3].disabled = true;
+                planButtons[3].className = 'plan-button btn-current';
+            }
+            
+            // 更新订阅浮标
+            updateSubscriptionBadge();
+        });
+        
+        // 处理支付跳转
+        function handlePayment(plan) {
+            // 存储用户选择的计划，用于支付成功后更新
+            localStorage.setItem('pendingPlan', plan);
+            
+            // 支付成功后会跳转到 subscribe-success.html
+            // 在实际应用中，这里可能需要更复杂的支付处理逻辑
+        }
+        
+        // 更新订阅浮标
+        function updateSubscriptionBadge() {
+            if (!localStorage.getItem('userPlan')) {
+                localStorage.setItem('userPlan', 'free');
+            }
+            const userPlan = localStorage.getItem('userPlan').toLowerCase();
+            const badge = document.getElementById('subscription-badge');
+
+            switch(userPlan) {
+                case 'free':
+                    badge.innerHTML = '🌱 Plan: Free';
+                    badge.style.backgroundColor = '#f0f9ff';
+                    badge.style.color = '#3182ce';
+                    break;
+                case 'starter':
+                    badge.innerHTML = '🔰 Plan: Starter';
+                    badge.style.backgroundColor = '#f0fff4';
+                    badge.style.color = '#38a169';
+                    break;
+                case 'plus':
+                    badge.innerHTML = '🚀 Plan: Plus';
+                    badge.style.backgroundColor = '#faf5ff';
+                    badge.style.color = '#805ad5';
+                    break;
+                case 'pro':
+                    badge.innerHTML = '👑 Plan: Pro';
+                    badge.style.backgroundColor = '#fff5f7';
+                    badge.style.color = '#d53f8c';
+                    break;
+                default:
+                    badge.innerHTML = '🌱 Plan: Free';
+                    badge.style.backgroundColor = '#f0f9ff';
+                    badge.style.color = '#3182ce';
+            }
+
+            badge.onmouseover = function() {
+                this.style.transform = 'translateY(-2px)';
+                this.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
+            };
+            badge.onmouseout = function() {
+                this.style.transform = 'translateY(0)';
+                this.style.boxShadow = '0 2px 5px rgba(0,0,0,0.1)';
+            };
+            badge.onclick = function() {
+                window.location.href = '/subscribe-success.html';
+            };
+        }
+    </script>
+</body>
+</html>

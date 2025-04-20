@@ -188,9 +188,17 @@
           this.style.boxShadow = '0 2px 5px rgba(0,0,0,0.1)';
         };
         badge.onclick = function() {
-          window.location.href = '/subscribe-success.html';
-        };
+  window.location.href = 'subscribe-success.html';
+};
       })();
     </script>
+<script>
+    // ⬇️ 支付成功后，将 pendingPlan 更新为 userPlan
+    const newPlan = localStorage.getItem('pendingPlan');
+    if (newPlan) {
+        localStorage.setItem('userPlan', newPlan);
+        localStorage.removeItem('pendingPlan');
+    }
+  </script>
 </body>
 </html>
